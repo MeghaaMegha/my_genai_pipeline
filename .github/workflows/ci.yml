@@ -51,7 +51,7 @@ jobs:
     - name: Install Environment Dependencies
       run: |
           poetry lock
-          poetry install --no-interaction
+          poetry install --no-interaction --with=dev
 
     - name: Check Code Formatting (Black)
       run: |
@@ -61,5 +61,4 @@ jobs:
 
     - name: Run Test Suite (Pytest Verification)
       run: |
-          pip install pytest
           poetry run pytest
