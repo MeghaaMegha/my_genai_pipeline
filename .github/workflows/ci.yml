@@ -61,4 +61,5 @@ jobs:
 
     - name: Run Test Suite (Pytest Verification)
       run: |
-          poetry run pytest
+          pip install pytest
+          pytest
