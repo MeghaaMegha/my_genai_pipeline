@@ -51,7 +51,7 @@ jobs:
     - name: Install Environment Dependencies
       run: |
           poetry lock
-          poetry install --no-interaction --with=dev
+          poetry install --no-interaction --no-root
 
     - name: Check Code Formatting (Black)
       run: |
