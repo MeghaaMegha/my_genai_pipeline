@@ -50,8 +50,8 @@ jobs:
 
     - name: Install Environment Dependencies
       run: |
-          poetry lock --check || poetry lock
-          poetry install --no-interaction --with dev
+          poetry lock
+          poetry install --no-interaction
 
     - name: Check Code Formatting (Black)
       run: poetry run black --check src/ tests/
