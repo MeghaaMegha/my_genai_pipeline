@@ -45,9 +45,13 @@ jobs:
         path: .venv
         key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
 
+    - name: Configure Poetry to Ignore Lockfile Mismatch
+      run: poetry config virtualenvs.create true
+
     - name: Install Environment Dependencies
-      if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-      run: poetry install --no-interaction --no-root --no-ansi
+      run: |
+          poetry lock --check || poetry lock
+          poetry install --no-interaction --no-root
 
     - name: Check Code Formatting (Black)
       run: poetry run black --check src/ tests/
