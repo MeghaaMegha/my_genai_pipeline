@@ -63,6 +63,6 @@ jobs:
       env:
         PYTHONPATH: ${{github.workspace}}
       run: |
-          pip install pytest pyspark transformers langchain-communitychromadb torch pandas
+          pip install pytest pyspark transformers langchain-community chromadb torch pandas
           pytest
 
