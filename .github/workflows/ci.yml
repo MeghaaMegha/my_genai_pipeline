@@ -55,14 +55,9 @@ jobs:
 
     - name: Check Code Formatting (Black)
       run: |
-          pip install black
-          black --check src/ tests/
+          poetry run black --check src/ tests/
       continue-on-error: false
 
     - name: Run Test Suite (Pytest Verification)
-      env:
-        PYTHONPATH: ${{github.workspace}}
       run: |
-          pip install pytest pyspark transformers langchain-community chromadb torch pandas pyarrow grpcio-status
-          pytest
-
+          poetry run pytest tests/test_pipeline.py -v
