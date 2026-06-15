@@ -8,6 +8,7 @@ from src.bert_prep import tokenize_for_bert
 from src.vector_store import generate_and_store_embeddings
 from mlflow.tracking import MlflowClient
 
+
 # ==========================================
 # DAY 1: LOGGER UTILITY TESTS
 # ==========================================
@@ -26,7 +27,9 @@ def test_get_production_logger():
 def spark_session() -> SparkSession:
     """Fixture to initialize a local, isolated Spark Session bypassing remote cluster requirements."""
     spark = (
-        SparkSession.builder.remote("local[*]")  # Forces Databricks Connect to run locally
+        SparkSession.builder.remote(
+            "local[*]"
+        )  # Forces Databricks Connect to run locally
         .appName("pipeline-unit-tests")
         .config("spark.sql.shuffle.partitions", "1")
         .getOrCreate()
@@ -121,31 +124,36 @@ def test_vector_store_persistence(tmp_path):
 # ==========================================
 def test_mlflow_pipeline_artifact_logging():
     """
-    Automated assertion test to verify that our enterprise logging lifecycle 
+    Automated assertion test to verify that our enterprise logging lifecycle
     correctly commits data parameters, metrics, and binary artifacts to the registry.
     """
     # 1. Instantiate an active tracking client pointing to your local registry storage
     client = MlflowClient()
-    
+
     # 2. Extract the target experiment data space
     experiment = client.get_experiment_by_name("BERT_Text_Prep_Pipeline")
     assert experiment is not None, "MLflow Experiment space was not found!"
-    
+
     # 3. Retrieve the latest active run logged in this system context
     runs = client.search_runs(experiment_ids=[experiment.experiment_id])
-    assert len(runs) > 0, "No active pipeline runs detected inside the tracking registry!"
-    
+    assert (
+        len(runs) > 0
+    ), "No active pipeline runs detected inside the tracking registry!"
+
     latest_run = runs[0]
-    
+
     # 4. Programmatically assert that core structural metrics exist
     run_metrics = latest_run.data.metrics
-    assert "processed_records_count" in run_metrics, \
-        "Telemetry failed to index baseline data collection record metrics!"
-        
+    assert (
+        "processed_records_count" in run_metrics
+    ), "Telemetry failed to index baseline data collection record metrics!"
+
     # 5. Programmatically verify that heavy system file artifacts were written to disk
     artifacts = client.list_artifacts(latest_run.info.run_id)
     artifact_paths = [art.path for art in artifacts]
-    
+
     # Assert that either our model feature blocks or our vector directory tree was preserved
-    assert any("model_features" in path or "chroma_vector_db" in path for path in artifact_paths), \
-        "MLflow failure: Production tensor features and vector indices were not archived as file artifacts!"
+    assert any(
+        "model_features" in path or "chroma_vector_db" in path
+        for path in artifact_paths
+    ), "MLflow failure: Production tensor features and vector indices were not archived as file artifacts!"
