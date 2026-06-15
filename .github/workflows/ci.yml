@@ -61,4 +61,5 @@ jobs:
 
     - name: Run Test Suite (Pytest Verification)
       run: |
+          pip install pytest mlflow
           poetry run pytest tests/test_pipeline.py -v
