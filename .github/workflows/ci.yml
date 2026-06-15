@@ -55,7 +55,8 @@ jobs:
 
     - name: Check Code Formatting (Black)
       run: |
-          poetry run black --check src/ tests/
+           pip install black
+           black --check src/ tests/
       continue-on-error: false
 
     - name: Run Test Suite (Pytest Verification)
