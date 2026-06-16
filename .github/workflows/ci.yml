@@ -62,4 +62,7 @@ jobs:
     - name: Run Test Suite (Pytest Verification)
       run: |
           pip install pytest mlflow
-          poetry run pytest tests/test_pipeline.py -v
+          pip install pyspark transformers
+          pip install langchain-community chromadb
+          pip install torch pandas pyarrow grpcio-status
+          pytest tests/test_pipeline.py -v
