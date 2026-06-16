@@ -69,13 +69,17 @@ def run_end_to_end_pipeline():
         parameters=pipeline_params,
         metrics=pipeline_metrics,
         tensor_artifacts=bert_features,
-        vector_db_dir="./chroma_db"
+        vector_db_dir="./chroma_db",
     )
     logger.info("Verifying RAG Knowledge Layer via Context Retrieval Routing...")
-    sample_search_prompt = "Tell me about the distributed Spark data processing components."
-    
-    contexts = retrieve_relevant_context(query=sample_search_prompt, persist_directory="./chroma_db", k=1)
-    
+    sample_search_prompt = (
+        "Tell me about the distributed Spark data processing components."
+    )
+
+    contexts = retrieve_relevant_context(
+        query=sample_search_prompt, persist_directory="./chroma_db", k=1
+    )
+
     for idx, context in enumerate(contexts):
         logger.info(f"[RETRIEVED CONTEXT #{idx+1}]: {context}")
 

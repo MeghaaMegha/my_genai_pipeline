@@ -39,42 +39,47 @@ def generate_and_store_embeddings(
         logger.error(f"Failed to compile text vector embeddings layer: {e}")
         raise e
 
-def retrieve_relevant_context(query: str, persist_directory: str = "./chroma_db", k: int = 2) -> list:
+
+def retrieve_relevant_context(
+    query: str, persist_directory: str = "./chroma_db", k: int = 2
+) -> list:
     """
     Query the persistent Chroma vector database to extract semantically relevant text context.
-    
+
     Args:
         query (str): The natural language query or user prompt.
         persist_directory (str): The path where the vector database is stored.
         k (int): The number of top relevant documents to retrieve.
-        
+
     Returns:
         list: A list of clean string fragments matching the query context.
     """
     try:
         logger.info(f"Querying vector database for context routing. Prompt: '{query}'")
-        
+
         # Instantiate the exact same embedding model layout used during ingestion
         embedding_engine = DeterministicFakeEmbedding(size=768)
-        
+
         # Load the existing persistent database from disk without writing new records
         vector_db = Chroma(
-            persist_directory=persist_directory,
-            embedding_function=embedding_engine
+            persist_directory=persist_directory, embedding_function=embedding_engine
         )
-        
+
         # Execute a similarity search against the vector index
         matching_docs = vector_db.similarity_search(query, k=k)
-        
+
         # Extract the raw string content out of the LangChain Document wrappers
         retrieved_contexts = [doc.page_content for doc in matching_docs]
-        
-        logger.info(f"[SUCCESS] Extracted {len(retrieved_contexts)} relevant matching context blocks.")
+
+        logger.info(
+            f"[SUCCESS] Extracted {len(retrieved_contexts)} relevant matching context blocks."
+        )
         return retrieved_contexts
-        
+
     except Exception as e:
         logger.error(f"Failed to query and route vector context layers: {e}")
         raise e
+
 
 if __name__ == "__main__":
     # Isolated module execution verification check loop
