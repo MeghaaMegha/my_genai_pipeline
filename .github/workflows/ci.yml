@@ -60,9 +60,12 @@ jobs:
       continue-on-error: false
 
     - name: Run Test Suite (Pytest Verification)
+      env:
+          PYTHONPATH: ${{ github.workspace }}
       run: |
           pip install pytest mlflow
           pip install pyspark transformers
           pip install langchain-community chromadb
           pip install torch pandas pyarrow grpcio-status
+          python -m src.main
           pytest tests/test_pipeline.py -v
