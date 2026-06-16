@@ -68,5 +68,6 @@ jobs:
           pip install pyspark transformers
           pip install langchain-community chromadb
           pip install torch pandas pyarrow grpcio-status
+          rm -rf .mlruns mlflow.db chroma_db
           python -m src.main
           pytest tests/test_pipeline.py -v
